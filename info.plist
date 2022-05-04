@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>dev.coder.embold</string>
+	<key>connections</key>
+	<dict>
+		<key>3D3F68BB-1D1C-4C2F-B52E-F00365CBF6A9</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4AE5F221-C6F2-414C-A47C-FF27B0C3A86A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>C8D59FCE-1C32-4862-A0EA-C5ACFEF90D8D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4AE5F221-C6F2-414C-A47C-FF27B0C3A86A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>zpthree</string>
+	<key>description</key>
+	<string>Manage Coder workspaces</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>coder-workspaces</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>coder</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>stopall=-stopall
+stop=-stop
+url=-url
+
+if [[ "$stopall" == *"$1"* ]] || [[ "$stop" == *"$1"* ]]; then
+	./node_modules/.bin/run-node src/stop.js "$1"
+elif [[ "$url" == *"$1"* ]]; then
+	./node_modules/.bin/run-node src/url.js "$1"
+else
+	./node_modules/.bin/run-node src/main.js "$1"
+fi</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>C8D59FCE-1C32-4862-A0EA-C5ACFEF90D8D</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>if [ "$1" != "" ]; then
+	if [ "$3" == "ON" ]; then
+		/usr/local/bin/coder workspaces stop $1
+	elif [ "$3" == "open-url" ]; then
+		open -a "Firefox Developer Edition" https://$1--zach.embold.dev
+	elif [ "$3" == "shutdown-all" ]; then
+		./node_modules/.bin/run-node src/stopAll.js
+	else
+		/usr/local/bin/coder workspaces rebuild $1 --force
+		for (( ; ; ))
+		do
+			echo "running..."
+			PING=$(/usr/local/bin/coder ws ping $1 -c 1)
+			STR='connected'
+
+			if [[ "$PING" == *"$STR"* ]]; then
+				open -a "Firefox Developer Edition" https://$1--zach.embold.dev
+				break
+			fi
+		done
+	fi
+fi</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>4AE5F221-C6F2-414C-A47C-FF27B0C3A86A</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>cdr</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>stopall=-stopall
+stop=-stop
+url=-url
+
+if [[ "$stopall" == *"$1"* ]] || [[ "$stop" == *"$1"* ]]; then
+	./node_modules/.bin/run-node src/stop.js "$1"
+elif [[ "$url" == *"$1"* ]]; then
+	./node_modules/.bin/run-node src/url.js "$1"
+else
+	./node_modules/.bin/run-node src/main.js "$1"
+fi</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>3D3F68BB-1D1C-4C2F-B52E-F00365CBF6A9</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>3D3F68BB-1D1C-4C2F-B52E-F00365CBF6A9</key>
+		<dict>
+			<key>xpos</key>
+			<integer>70</integer>
+			<key>ypos</key>
+			<integer>190</integer>
+		</dict>
+		<key>4AE5F221-C6F2-414C-A47C-FF27B0C3A86A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>355</integer>
+			<key>ypos</key>
+			<integer>135</integer>
+		</dict>
+		<key>C8D59FCE-1C32-4862-A0EA-C5ACFEF90D8D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>70</integer>
+			<key>ypos</key>
+			<integer>60</integer>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
