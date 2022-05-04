@@ -9,12 +9,14 @@ const workspaces = await alfy.fetch(url, options);
 
 const items = [];
 
-items.push({
-  title: 'Shut down all workspaces',
-  arg: [null, null, `shutdown-all`]
-})
+if ('-stopall'.includes(alfy.input) && !'-url'.includes(alfy.input)) {
+  items.push({
+    title: 'Shut down all workspaces',
+    arg: [null, null, `shutdown-all`]
+  })
+}
 
-if (alfy.input !== '-stopall') {
+if ('-stop'.includes(alfy.input) && alfy.input !== '-stopall') {
   workspaces
   .map(element => {
     if (element.latest_stat.container_status === 'ON') {
@@ -22,6 +24,19 @@ if (alfy.input !== '-stopall') {
         title: `Shut down ${element.name}`,
         subtitle: `Status: ${element.latest_stat.container_status}`,
         arg: [element.name, element.id, element.latest_stat.container_status]
+      });
+    }
+  });
+}
+
+if ('-url'.includes(alfy.input)) {
+  workspaces
+  .map(element => {
+    if (element.latest_stat.container_status === 'ON') {
+      return items.push({
+        title: `Open https://${element.name}${process.env.BASE_FRONTEND_URL}`,
+        subtitle: `Status: ${element.latest_stat.container_status}`,
+        arg: [element.name, element.id, `open-url`]
       });
     }
   });
