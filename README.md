@@ -18,13 +18,15 @@ cp example.env .env
 nano .env
 ```
 
-## Usage
+## Requirements
 
 You will need to have the [coder cli](https://github.com/coder/coder-cli) installed and configured. You will also need to create a coder api key by running the following command in your terminal:
 
 ```
 coder tokens create api_key
 ```
+
+## Usage
 
 Search for a workspace with the `coder` or `cdr` keywords. Select the workspace to start/stop it.
 
