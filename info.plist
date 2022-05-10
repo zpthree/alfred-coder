@@ -106,14 +106,18 @@ name=$1
 action=$2
 url=$3
 
-if [ "$url" != "" ] &amp;&amp; [ "action" != "" ] &amp;&amp; [ "name" != "" ]; then
+if [ "$url" != "" ] &amp;&amp; [ "$action" != "" ] &amp;&amp; [ "$name" != "" ]; then
 	if [ "$action" == "view" ] || [ "$action" == "code" ]; then
 		open -a "$browser" $url
 		exit 0;
 	fi
 fi
 
-if [ "action" == "stopall" ]; then
+if [ "$action" == "stop" ] &amp;&amp; [ "$name" != "" ]; then
+	/usr/local/bin/coder workspaces stop $1
+fi
+
+if [ "$action" == "stopall" ]; then
 	./node_modules/.bin/run-node src/stopAll.js
 	exit 0;
 fi
