@@ -95,12 +95,12 @@ dotenv.config();
   if (action && !items.length) {
     items.push({
       title: `Ah snap!`,
-      subtitle: `Command is not available or no workspace was found with ${workspace} in it's name`,
+      subtitle: `Command is not available or no workspace was found with \`${workspace}\` in it's name`,
     });
   } else if (!items.length && !allowedActions.includes(workspace)) {
     items.push({
       title: `Ah snap!`,
-      subtitle: `Could not find any workspace with ${workspace} in it's name`,
+      subtitle: `Could not find any workspace with \`${workspace}\` in it's name`,
     });
   } else if (allowedActions.includes(workspace)) {
     items.push({
