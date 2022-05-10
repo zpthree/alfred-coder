@@ -5,15 +5,15 @@ dotenv.config();
 
 (async () => {
   const workspaces = await getWorkspaces();
-  const allowedActions = [`start`, `stop`, `view`, `code`];
+  const allowedActions = [`start`, `stop`, `term`, `view`, `code`];
 
   let items = [];
   let action;
   let workspace;
 
-  if (alfy.input.includes(`:`)) {
-    action = alfy.input.split(`:`)[0];
-    workspace = alfy.input.split(`:`)[1];
+  if (alfy.input.includes(` `)) {
+    action = alfy.input.split(` `)[0];
+    workspace = alfy.input.split(` `)[1];
 
     if (!allowedActions.includes(action)) {
       return alfy.output({
@@ -23,6 +23,7 @@ dotenv.config();
   } else {
     workspace = alfy.input;
   }
+
 
   if (`stop:all`.includes(alfy.input)) {
     items.push({
@@ -39,16 +40,24 @@ dotenv.config();
           if (`view`.includes(action)) {
             return items.push({
               title: `${el.name}`,
-              subtitle: `https://${el.name}${process.env.BASE_FRONTEND_URL}`,
-              arg: [el.name, `view`, `https://${el.name}${process.env.BASE_FRONTEND_URL}`]
+              subtitle: `https://${el.name}${process.env.APP_USER}.${process.env.BASE_URL}`,
+              arg: [el.name, `view`, `https://${el.name}${process.env.APP_USER}.${process.env.BASE_URL}`]
             });
           }
 
           if (`code`.includes(action)) {
             return items.push({
               title: `${el.name}`,
-              subtitle: `Open ${el.name} in VS Code in the browser`,
-              arg: [el.name, `code`, `https://${process.env.BASE_CODE_URL}?workspaceId=${el.id}`]
+              subtitle: `Open ${el.name} editor in the browser`,
+              arg: [el.name, `code`, `https://${process.env.BASE_URL}/app/${process.env.APP_EDITOR}?workspaceId=${el.id}`]
+            });
+          }
+
+          if (`term`.includes(action)) {
+            return items.push({
+              title: `${el.name}`,
+              subtitle: `Open ${el.name} terminal in the browser`,
+              arg: [el.name, `terminal`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
             });
           }
 
@@ -77,15 +86,21 @@ dotenv.config();
 
         if (el.latest_stat.container_status === `ON`) {
           items.push({
-            title: `Open the frontend of ${el.name} in the browser.`,
-            subtitle: `https://${el.name}${process.env.BASE_FRONTEND_URL}`,
-            arg: [el.name, `view`, `https://${el.name}${process.env.BASE_FRONTEND_URL}`]
+            title: `View - ${el.name}`,
+            subtitle: `Open ${el.name} frontend in the browser`,
+            arg: [el.name, `view`, `https://${el.name}${process.env.APP_USER}.${process.env.BASE_URL}`]
           });
 
           items.push({
-            title: `Open ${el.name} in VS Code`,
-            subtitle: `https://${process.env.BASE_CODE_URL}?workspaceId=${el.id}.`,
-            arg: [el.name, `code`, `https://${process.env.BASE_CODE_URL}?workspaceId=${el.id}`]
+            title: `Editor - ${el.name}`,
+            subtitle: `Open ${el.name} editor in the browser`,
+            arg: [el.name, `code`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
+          });
+
+          items.push({
+            title: `Terminal - ${el.name}`,
+            subtitle: `Open ${el.name} terminal in the browser`,
+            arg: [el.name, `term`, `https://${process.env.BASE_CODE_URL}/terminal?workspaceId=${el.id}`]
           });
         }
       }
@@ -105,7 +120,7 @@ dotenv.config();
   } else if (allowedActions.includes(workspace)) {
     items.push({
       title: `Keep going...`,
-      subtitle: `Add a colon to the end of the command to initialize an action. [${workspace}:workspace]`,
+      subtitle: `Add another space to initialize an action. [${workspace} workspace]`,
     });
   }
 

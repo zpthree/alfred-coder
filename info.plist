@@ -107,7 +107,7 @@ action=$2
 url=$3
 
 if [ "$url" != "" ] &amp;&amp; [ "$action" != "" ] &amp;&amp; [ "$name" != "" ]; then
-	if [ "$action" == "view" ] || [ "$action" == "code" ]; then
+	if [ "$action" == "view" ] || [ "$action" == "code" ] || [ "$action" == "terminal" ]; then
 		open -a "$browser" $url
 		exit 0;
 	fi
