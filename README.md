@@ -38,17 +38,17 @@ Some commands will open urls in your default browser. On the first line of the `
 
 ### Commands
 
-- `cdr workspace` will display the given workspaces with any commands that may be available. Certain commands will only be available if the workspace is running.
+- `cdr workspace` - display the given workspaces with any commands that may be available. Certain commands will only be available if the workspace is running.
 
-- `cdr stop:workspace` will stop the given workspace
+- `cdr stop:workspace` - stop the given workspace
 
-- `cdr start:workspace` will start the given workspace
+- `cdr start:workspace` - start the given workspace
 
-- `cdr view:workspace` will open the frontend of given workspace in the browser. You can specify the base url with the `BASE_FRONTEND_URL` environment variable.
+- `cdr view:workspace` - open the frontend of given workspace in the browser. You can specify the base url with the `BASE_FRONTEND_URL` environment variable.
 
-- `cdr code:workspace` will open the code for the given workspace in the browser in your editor of choice. You can specify the editor with the `BASE_CODE_URL` environment variable.
+- `cdr code:workspace` - open the code for the given workspace in the browser in your editor of choice. You can specify the editor with the `BASE_CODE_URL` environment variable.
 
-- `cdr stop:all` will stop all workspaces
+- `cdr stop:all` - stop all workspaces
 
 ```
 browser="Firefox Developer Edition"
