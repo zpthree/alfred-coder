@@ -1,22 +1,44 @@
 import dotenv from 'dotenv';
 import alfy from 'alfy';
-
+import getWorkspaces, { options } from './getWorkspaces.js';
 dotenv.config();
 
-const url = `${process.env.ACCESS_URL}/${process.env.API_ROUTE}?users=${process.env.USER_ID}`
-const options = { headers: { 'Session-Token': `${process.env.API_KEY}` }, maxAge: 2000 };
-const workspaces = await alfy.fetch(url, options);
+async function shutdownWorkspaces() {
+  const workspaces = await getWorkspaces();
 
-const items = [];
-workspaces
-  .map(element => {
-    if (element.latest_stat.container_status === 'ON') {
-      return items.push({
-        title: `https://${element.name}${process.env.BASE_FRONTEND_URL}`,
-        subtitle: `Status: ${element.latest_stat.container_status}`,
-        arg: [element.name, element.id, `open-url`]
-      });
+  // loop over all workspaces and turn off any that are on
+  const active = []
+
+  await Promise.all(workspaces.map(({ id, latest_stat: { container_status }, name }) => {
+    if (container_status == 'ON') {
+      alfy.fetch(`${process.env.ACCESS_URL}/${process.env.API_ROUTE}/${id}/stop`, {
+        method: 'put',
+        ...options
+      })
+
+      active.push(name);
     }
-  });
+  }));
 
-alfy.output(items);
+  return active;
+}
+
+(async () => {
+  let active = await shutdownWorkspaces();
+  const initial = active;
+
+  let i = 0;
+  while (active.length) {
+    active = await shutdownWorkspaces();
+
+    if (i+=1 > 5) {
+      return;
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  if (initial.length === 0) {
+    return;
+  }
+})();
