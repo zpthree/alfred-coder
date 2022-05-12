@@ -50,7 +50,7 @@ Some commands will open urls in your default browser. On the first line of the `
 
 - `cdr term workspace` - open the terminal for the given workspace in the browser.
 
-- `cdr stop all` - stop all workspaces
+- `cdr stop:all` - stop all workspaces
 
 ```
 browser="Firefox Developer Edition"
