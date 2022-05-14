@@ -24,7 +24,6 @@ dotenv.config();
     workspace = alfy.input;
   }
 
-
   if (`stop:all`.includes(alfy.input)) {
     items.push({
       title: `Stop all`,
@@ -81,7 +80,7 @@ dotenv.config();
         items.push({
           title: `${el.latest_stat.container_status === `ON` ? `Shut down` : `Start`} ${el.name}`,
           subtitle: `Status: ${el.latest_stat.container_status}`,
-          arg: [el.name, el.id, el.latest_stat.container_status]
+          arg: [el.name, el.latest_stat.container_status === `ON` ? `stop` : `start`, el.latest_stat.container_status]
         });
 
         if (el.latest_stat.container_status === `ON`) {
@@ -94,13 +93,13 @@ dotenv.config();
           items.push({
             title: `Editor - ${el.name}`,
             subtitle: `Open ${el.name} editor in the browser`,
-            arg: [el.name, `code`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
+            arg: [el.name, `code`, `https://${process.env.BASE_URL}/app/${process.env.APP_EDITOR}?workspaceId=${el.id}`]
           });
 
           items.push({
             title: `Terminal - ${el.name}`,
             subtitle: `Open ${el.name} terminal in the browser`,
-            arg: [el.name, `term`, `https://${process.env.BASE_CODE_URL}/terminal?workspaceId=${el.id}`]
+            arg: [el.name, `terminal`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
           });
         }
       }
