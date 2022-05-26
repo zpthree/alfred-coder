@@ -32,9 +32,7 @@ Note: We are using the API to get the workspaces, rather than the coder cli, bec
 
 Search for a workspace with the `coder` or `cdr` keywords. Select the workspace to start/stop it.
 
-There are also currently four tasks that you can use in addition to toggling the workspace.
-
-Some commands will open urls in your default browser. On the first line of the `Run Script` action you can set the browser to whatever browser you want to use. I have it set to `Firefox Developer Edition`.
+There are also tasks that you can use in addition to starting/stopping the workspace.
 
 ### Commands
 
