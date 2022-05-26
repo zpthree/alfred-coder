@@ -11,7 +11,7 @@ async function shutdownWorkspaces() {
 
   await Promise.all(workspaces.map(({ id, latest_stat: { container_status }, name }) => {
     if (container_status == 'ON') {
-      alfy.fetch(`${process.env.ACCESS_URL}/${process.env.API_ROUTE}/${id}/stop`, {
+      alfy.fetch(`${process.env.ACCESS_URL}/api/v0/workspaces/${id}/stop`, {
         method: 'put',
         ...options
       })
