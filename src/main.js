@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
 import alfy from 'alfy';
-import getWorkspaces from './getWorkspaces.js';
+import getWorkspaces from './lib/getWorkspaces.js';
 dotenv.config();
+
+const allowedActions = [`start`, `rebuild`, `stop`, `term`, `terminal`, `view`, `code`];
 
 (async () => {
   const workspaces = await getWorkspaces();
-  const allowedActions = [`start`, `stop`, `term`, `view`, `code`];
 
   let items = [];
   let action;
@@ -28,19 +29,21 @@ dotenv.config();
     items.push({
       title: `Stop all`,
       subtitle: `Shut down all workspaces`,
-      arg: [`Stop all`, `stopall`, null]
+      arg: [process.env.BROWSER_NAME, process.env.CODER_CLI_PATH, `Stop all`, `stopall`, null]
     });
   }
 
   workspaces.map(el => {
+    const defaultArgs = [process.env.BROWSER_NAME, process.env.CODER_CLI_PATH, el.name];
+
     if (el.name.includes(workspace)) {
       if (action) {
         if (el.latest_stat.container_status === `ON`) {
           if (`view`.includes(action)) {
             return items.push({
               title: `${el.name}`,
-              subtitle: `https://${el.name}${process.env.APP_USER}.${process.env.BASE_URL}`,
-              arg: [el.name, `view`, `https://${el.name}${process.env.APP_USER}.${process.env.BASE_URL}`]
+              subtitle: `https://${el.name}--${process.env.APP_USER}.${process.env.BASE_URL}`,
+              arg: [...defaultArgs, `view`, `https://${el.name}--${process.env.APP_USER}.${process.env.BASE_URL}`]
             });
           }
 
@@ -48,7 +51,7 @@ dotenv.config();
             return items.push({
               title: `${el.name}`,
               subtitle: `Open ${el.name} editor in the browser`,
-              arg: [el.name, `code`, `https://${process.env.BASE_URL}/app/${process.env.APP_EDITOR}?workspaceId=${el.id}`]
+              arg: [...defaultArgs, `code`, `https://${process.env.BASE_URL}/app/${process.env.APP_EDITOR}?workspaceId=${el.id}`]
             });
           }
 
@@ -56,7 +59,15 @@ dotenv.config();
             return items.push({
               title: `${el.name}`,
               subtitle: `Open ${el.name} terminal in the browser`,
-              arg: [el.name, `terminal`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
+              arg: [...defaultArgs, `terminal`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
+            });
+          }
+
+          if (`terminal`.includes(action)) {
+            return items.push({
+              title: `${el.name}`,
+              subtitle: `Open ${el.name} terminal in the browser`,
+              arg: [...defaultArgs, `terminal`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
             });
           }
 
@@ -64,7 +75,15 @@ dotenv.config();
             return items.push({
               title: `${el.name}`,
               subtitle: `Shut down ${el.name}`,
-              arg: [el.name, `stop`, null]
+              arg: [...defaultArgs, `stop`, null]
+            });
+          }
+
+          if (`rebuild`.includes(action)) {
+            return items.push({
+              title: `${el.name}`,
+              subtitle: `Rebuild ${el.name}`,
+              arg: [...defaultArgs, `rebuild`, null]
             });
           }
         } else {
@@ -72,7 +91,7 @@ dotenv.config();
             return items.push({
               title: `${el.name}`,
               subtitle: `Start ${el.name}`,
-              arg: [el.name, `start`, null]
+              arg: [...defaultArgs, `start`, `https://${el.name}--${process.env.APP_USER}.${process.env.BASE_URL}`]
             });
           }
         }
@@ -80,32 +99,39 @@ dotenv.config();
         items.push({
           title: `${el.latest_stat.container_status === `ON` ? `Shut down` : `Start`} ${el.name}`,
           subtitle: `Status: ${el.latest_stat.container_status}`,
-          arg: [el.name, el.latest_stat.container_status === `ON` ? `stop` : `start`, el.latest_stat.container_status]
+          arg: [...defaultArgs, el.latest_stat.container_status === `ON` ? `stop` : `start`, el.latest_stat.container_status]
         });
 
         if (el.latest_stat.container_status === `ON`) {
           items.push({
+            title: `Rebuild ${el.name}`,
+            subtitle: `Status: ${el.latest_stat.container_status}`,
+            arg: [...defaultArgs, `rebuild`, null]
+          });
+
+          items.push({
             title: `View - ${el.name}`,
             subtitle: `Open ${el.name} frontend in the browser`,
-            arg: [el.name, `view`, `https://${el.name}${process.env.APP_USER}.${process.env.BASE_URL}`]
+            arg: [...defaultArgs, `view`, `https://${el.name}--${process.env.APP_USER}.${process.env.BASE_URL}`]
           });
 
           items.push({
             title: `Editor - ${el.name}`,
             subtitle: `Open ${el.name} editor in the browser`,
-            arg: [el.name, `code`, `https://${process.env.BASE_URL}/app/${process.env.APP_EDITOR}?workspaceId=${el.id}`]
+            arg: [...defaultArgs, `code`, `https://${process.env.BASE_URL}/app/${process.env.APP_EDITOR}?workspaceId=${el.id}`]
           });
 
           items.push({
             title: `Terminal - ${el.name}`,
             subtitle: `Open ${el.name} terminal in the browser`,
-            arg: [el.name, `terminal`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
+            arg: [...defaultArgs, `terminal`, `https://${process.env.BASE_URL}/app/terminal?workspaceId=${el.id}`]
           });
         }
       }
     }
   });
 
+  // TODO: better error messages
   if (action && !items.length) {
     items.push({
       title: `Ah snap!`,

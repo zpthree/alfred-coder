@@ -96,49 +96,65 @@
 			<key>config</key>
 			<dict>
 				<key>concurrently</key>
-				<false/>
+				<true/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>browser="Firefox Developer Edition"
+				<string>browser=$1
+coder=$2
+name=$3
+action=$4
+url=$5
 
-name=$1
-action=$2
-url=$3
+if [ "$coder" == "" ]; then
+	exit 0;
+fi
 
 if [ "$url" != "" ] &amp;&amp; [ "$action" != "" ] &amp;&amp; [ "$name" != "" ]; then
 	if [ "$action" == "view" ] || [ "$action" == "code" ] || [ "$action" == "terminal" ]; then
-		open -a "$browser" $url
+
+		if [ "$browser" == "" ]; then
+			open $url
+		else
+			open -a "$browser" $url
+		fi
+
 		exit 0;
 	fi
 fi
 
 if [ "$action" == "stop" ] &amp;&amp; [ "$name" != "" ]; then
-	/usr/local/bin/coder workspaces stop $1
+	$coder workspaces stop $name
+	exit 0;
 fi
 
 if [ "$action" == "stopall" ]; then
-	./node_modules/.bin/run-node src/stopAll.js
+	./node_modules/.bin/run-node src/lib/stopAll.js
 	exit 0;
 fi
 
-if [ "$action" != "" ] &amp;&amp; [ "$action" != "start" ]; then
+if [ "$action" == "start" ] &amp;&amp; [ "$name" != "" ]; then
+	$coder workspaces rebuild $name --force
+	for (( ; ; ))
+	do
+	  PING=$($coder ws ping $name -c 1)
+	  STR='connected'
+
+      if [[ "$PING" == *"$STR"* ]]; then
+      	if [ "$browser" == "" ]; then
+      		open $url
+      	else
+       		open -a "$browser" $url
+      	fi
+      
+	    break
+	  fi
+	done
+
 	exit 0;
 fi
 
-
-/usr/local/bin/coder workspaces rebuild $1 --force
-for (( ; ; ))
-do
-  echo "running..."
-  PING=$(/usr/local/bin/coder ws ping $1 -c 1)
-  STR='connected'
-
-  if [[ "$PING" == *"$STR"* ]]; then
-    open -a "$browser" https://$1--zach.embold.dev
-    break
-  fi
-done</string>
+$coder workspaces rebuild $name --force</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>

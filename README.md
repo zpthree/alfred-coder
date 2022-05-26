@@ -42,7 +42,9 @@ Some commands will open urls in your default browser. On the first line of the `
 
 - `cdr stop workspace` - stop the given workspace
 
-- `cdr start workspace` - start the given workspace
+- `cdr start workspace` - start the given workspace and open the frontend in the browser
+
+- `cdr rebuild workspace` - rebuild the given workspace
 
 - `cdr view workspace` - open the frontend of given workspace in the browser. You can specify the base url with the `APP_USER` and `BASE_URL` environment variables.
 
@@ -51,10 +53,6 @@ Some commands will open urls in your default browser. On the first line of the `
 - `cdr term workspace` - open the terminal for the given workspace in the browser.
 
 - `cdr stop:all` - stop all workspaces
-
-```
-browser="Firefox Developer Edition"
-```
 
 ## References
 
