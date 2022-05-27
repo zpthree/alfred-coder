@@ -99,7 +99,7 @@ const allowedActions = [`start`, `rebuild`, `stop`, `term`, `terminal`, `view`, 
         items.push({
           title: `${el.latest_stat.container_status === `ON` ? `Shut down` : `Start`} ${el.name}`,
           subtitle: `Status: ${el.latest_stat.container_status}`,
-          arg: [...defaultArgs, el.latest_stat.container_status === `ON` ? `stop` : `start`, el.latest_stat.container_status]
+          arg: [...defaultArgs, el.latest_stat.container_status === `ON` ? `stop` : `start`, `https://${el.name}--${process.env.APP_USER}.${process.env.BASE_URL}`]
         });
 
         if (el.latest_stat.container_status === `ON`) {

@@ -142,11 +142,11 @@ if [ "$action" == "start" ] &amp;&amp; [ "$name" != "" ]; then
 
       if [[ "$PING" == *"$STR"* ]]; then
       	if [ "$browser" == "" ]; then
-      		open $url
-      	else
-       		open -a "$browser" $url
-      	fi
-      
+					open $url
+				else
+					open -a "$browser" $url
+				fi
+
 	    break
 	  fi
 	done
